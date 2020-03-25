@@ -1,0 +1,30 @@
+:root {
+  --primary-color: #09833f;
+  --secondary-color: #d9534f;
+  --primary-font: #ffffff;
+  --secondary-font: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+.primary {
+  background-color: var(--primary-color) !important;
+  color: var(--primary-font) !important;
+}
+
+.secondary {
+  background-color: var(--secondary-color) !important;
+  color: var(--secondary-font) !important;
+}
+
+.container {
+  padding: 0 2rem;
+}

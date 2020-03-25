@@ -1,0 +1,38 @@
+stages:
+
+  - deploy-backend
+  - build-frontend
+  - deploy-frontend
+
+deploy-backend:
+  image: maven:3.3-jdk-8
+  stage: deploy-backend
+  script:
+    - mvn clean package -f "backend/"
+    - mvn azure-webapp:deploy -f "backend/" -s "backend/settings.xml"
+  only:
+    - web
+
+build-frontend:
+  image: node:10.15.3
+  stage: build-frontend
+  script:
+    - npm install --prefix frontend/
+    - npm run build --prefix frontend/
+  artifacts:
+    paths:
+      - frontend/dist/
+  only:
+    - web
+
+deploy-frontend:
+  image: microsoft/azure-cli
+  stage: deploy-frontend
+  script:
+    - az storage blob delete-batch -s "\$web" --connection-string $AZURE_STORAGE_CONNECTION_STRING
+    - az storage blob upload-batch -d "\$web" -s frontend/dist/ --connection-string $AZURE_STORAGE_CONNECTION_STRING
+    
+  dependencies:
+    - build-frontend
+  only:
+    - web
